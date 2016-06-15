@@ -1,7 +1,7 @@
 {
   "name": "call-cache",
-  "version": "1.0.0",
-  "description": "Cache returned argumtents of functions and feeds a callback",
+  "version": "1.0.1",
+  "description": "A simple in-memory function call caching for node.js feeding a callback",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/repraze/call-cache#readme",
   "dependencies": {
-    "memory-cache": "^0.1.6"
+    "memory-cache": "^0.1.6",
+    "object-assign": "^4.1.0"
   }
 }

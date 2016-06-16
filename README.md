@@ -30,6 +30,7 @@ cache.get('foo',
 
 Should output:
 
+    Cache: foo - Getting data, next time in 300000 //debug
     Fetching Foo
     Retrieved Foo
 
@@ -60,3 +61,45 @@ Amount of time before the cache expires in ms. Upon next call, the generator fun
 
 ### debug
 When set to `true` enables debuging. Default to `false`
+
+## Usage with async
+
+Here is a more advanced example using [async](https://www.npmjs.com/package/async)
+
+```javascript
+var cache = require('call-cache')({debug: true});
+var async = require('async');
+
+// using the cache
+
+cache.get('foobar',
+	function(callback){	// generating the cache
+		async.parallel({
+			foo: function(callback){
+				setTimeout(function () {
+					callback(null, 'foo');	// in async, the first argument is for errors
+				}, 100);
+			},
+			bar: function(callback){
+				setTimeout(function () {
+					callback(null, 'bar');
+				}, 200);
+			},
+		},
+		callback);	// feeding the callback here
+		console.log('Fetching Foo and Bar');
+	},
+	function(err, result){	// callback, always called
+		console.log(
+			'Retrieved '+result.foo,
+			'Retrieved '+result.bar
+		);
+	}
+);
+```
+
+Should output:
+
+    Cache: foobar - Getting data, next time in 300000 //debug
+    Fetching Foo and Bar
+    Retrieved foo Retrieved bar

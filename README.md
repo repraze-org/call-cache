@@ -53,7 +53,7 @@ Should output:
 
 ## Options
 
-Options can be defined when creating the cache after requiring it and can be overwritten by passinf options to the method calls directly.
+Options can be defined when creating the cache after requiring it and can be overwritten by passing options to the method calls directly.
 
 ### time
 Amount of time before the cache expires in ms. Upon next call, the generator function will be called again. Default to `1000*60*5` (5 mins)

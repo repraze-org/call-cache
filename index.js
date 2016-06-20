@@ -18,7 +18,6 @@ module.exports = function(options){
 				}
 			}
 			options = objectAssign(globalOptions, options);
-			var time = time || options.defaultTime;
 
 			var args = cache.get(key);
 			if(args === null){

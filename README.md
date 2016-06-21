@@ -36,10 +36,11 @@ Should output:
 
 ## API
 
-### get : function(key, generator, callback, [options])
+### get : function(key, generator, [callback, options])
 
 * Calls the generator function and pass the callback function if there is no cache for the specified key
 * Calls callback directly with any n cached arguments passed by the generator function
+* Callback is optional to only define periodical functions
 * Optional options can be provided to overwrite global ones
 
 ### del : function(key)

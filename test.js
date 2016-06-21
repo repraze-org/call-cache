@@ -106,6 +106,10 @@ describe('call-cache', function() {
     });
 
     describe('del', function(){
+        beforeEach(function() {
+            cache.clear();
+        });
+
         it('should return false for a key to an empty cache', function(){
             expect(cache.del('empty')).to.be.false;
         });
@@ -144,7 +148,7 @@ describe('call-cache', function() {
         });
     });
 
-    describe('clear', function(){
+    describe('clear', function(){    
         it('should clear all existing cache', function(){
             cache.get('key1', function(callback){callback()}, function(){
                 cache.get('key2', function(callback){callback()}, function(){

@@ -12,6 +12,16 @@ module.exports = function(options){
 
     return {
         get : function(key, generator, callback, options){
+            if(typeof key !== 'string' && !(key instanceof String)){
+                throw new Error('Cache key must be a string');
+            }
+            if(typeof generator !== 'function'){
+                throw new Error('Cache generator must be a function');
+            }
+            if(typeof callback !== 'undefined' && typeof callback !== 'function'){
+                throw new Error('Cache callback must be a function');
+            }
+
             if(!isNaN(parseFloat(options))){
                 options = {
                     time : options
@@ -24,10 +34,12 @@ module.exports = function(options){
                 if(options.debug){
                     console.log("Cache: "+key+" - Getting data, next time in "+options.time);
                 }
-                if(generator instanceof Function){
+                if(generator){
                     var cacher = function(){
                         cache.put(key, arguments, options.time);
-                        callback.apply(null, arguments);
+                        if(callback){
+                            callback.apply(null, arguments);
+                        }
                     }
                     generator(cacher);
                 }
@@ -35,7 +47,7 @@ module.exports = function(options){
                 if(options.debug){
                     console.log("Cache: "+key+" - Using cached data");
                 }
-                if(callback instanceof Function){
+                if(callback){
                     callback.apply(null, args);
                 }
             }

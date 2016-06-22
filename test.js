@@ -58,13 +58,31 @@ describe('call-cache', function() {
             }).to.not.throw();
         });
 
-        it('should generate arguments and send them to callback', function(){
+        it('should generate arguments and return them to callback directly', function(){
+            var obj = {foo: 10};
+            var tests = [
+                {val: 10,       expected: 10},
+                {val: "string", expected: "string"},
+                {val:  obj,     expected:  obj},
+            ];
+
+            tests.forEach(function(test){
+                cache.get('key', function(){
+                    return test.val;
+                }, function(val){
+                    expect(val).to.equal(test.expected);
+                    cache.clear();
+                });
+            });
+        });
+
+        it('should generate arguments and send them to given callback', function(){
             var obj = {foo: 10};
             var tests = [
                 {args: [10],                 expected: [10]},
                 {args: ["string"],           expected: ["string"]},
                 {args: [ obj],               expected: [ obj]},
-                {args: [10, "string",  obj], expected: [10, "string",  obj]},
+                {args: [10, "string",  obj], expected: [10, "string",  obj]}
             ];
 
             tests.forEach(function(test){
@@ -115,13 +133,13 @@ describe('call-cache', function() {
         });
 
         it('should return false given a key not in a non-empty cache', function(){
-            cache.get('key', function(callback){callback()}, function(){
+            cache.get('key', function(){}, function(){
                 expect(cache.del('miss')).to.be.false;
             });
         });
 
         it('should return true given a key for an existing cache', function(){
-            cache.get('key', function(callback){callback()}, function(){
+            cache.get('key', function(){}, function(){
                 expect(cache.del('key')).to.be.true;
             });
         });
@@ -148,10 +166,10 @@ describe('call-cache', function() {
         });
     });
 
-    describe('clear', function(){    
+    describe('clear', function(){
         it('should clear all existing cache', function(){
-            cache.get('key1', function(callback){callback()}, function(){
-                cache.get('key2', function(callback){callback()}, function(){
+            cache.get('key1', function(){}, function(){
+                cache.get('key2', function(){}, function(){
                     cache.clear();
 
                     expect(cache.del('key1')).to.be.false;

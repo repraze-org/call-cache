@@ -18,11 +18,23 @@ var cache = require('call-cache')(options);
 // using the cache
 
 cache.get('foo',
-    function(callback){ // generating the cache
+    function(){         // generating the cache
         console.log('Fetching Foo');
-        callback('foo');
+        return 'Foo';
     },
     function(result){   // callback, always called
+        console.log('Retrieved '+result);
+    }
+);
+
+// using the cache with generator callback, useful for asynchronous code
+
+cache.get('bar',
+    function(callback){     // generating the cache
+        console.log('Fetching Bar');
+        callback('Bar');    // can have any number of parameters
+    },
+    function(result){       // callback, always called
         console.log('Retrieved '+result);
     }
 );
@@ -33,12 +45,16 @@ Should output:
     Cache: foo - Getting data, next time in 300000 //debug
     Fetching Foo
     Retrieved Foo
+    Cache: bar - Getting data, next time in 300000 //debug
+    Fetching Bar
+    Retrieved Bar
 
 ## API
 
 ### get : function(key, generator, [callback, options])
 
-* Calls the generator function and pass the callback function if there is no cache for the specified key
+* Calls the generator function and pass the callback function when needed if there is no cache for the specified key
+* Generator functions not requiring a callback can simply return a value that will be passed to the callback
 * Calls callback directly with any n cached arguments passed by the generator function
 * Callback is optional to only define periodical functions
 * Optional options can be provided to overwrite global ones

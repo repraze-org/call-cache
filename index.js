@@ -41,12 +41,18 @@ module.exports = function(options){
                             callback.apply(null, arguments);
                         }
                     }
-                    generator(cacher);
+
+                    if(generator.length > 0){
+                        generator(cacher);
+                    }else{
+                        cacher(generator());
+                    }
                 }
             }else{
                 if(options.debug){
                     console.log("Cache: "+key+" - Using cached data");
                 }
+
                 if(callback){
                     callback.apply(null, args);
                 }

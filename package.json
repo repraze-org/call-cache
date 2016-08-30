@@ -1,6 +1,6 @@
 {
   "name": "call-cache",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "A simple in-memory function call caching for node.js feeding a callback",
   "main": "index.js",
   "scripts": {

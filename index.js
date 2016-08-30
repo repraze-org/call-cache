@@ -1,7 +1,7 @@
 'use strict';
 
 var cache = require("memory-cache");
-const objectAssign = require('object-assign');
+var objectAssign = require('object-assign');
 
 module.exports = function(options){
     var globalOptions = objectAssign({

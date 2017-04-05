@@ -19,7 +19,12 @@ module.exports = function(options){
                 throw new Error('Cache generator must be a function');
             }
             if(typeof callback !== 'undefined' && typeof callback !== 'function'){
-                throw new Error('Cache callback must be a function');
+                if(typeof options !== 'undefined'){
+                    throw new Error('Cache callback must be a function');
+                }else{
+                    options = callback;
+                    callback = undefined;
+                }
             }
 
             if(!isNaN(parseFloat(options))){
@@ -40,12 +45,33 @@ module.exports = function(options){
                         if(callback){
                             callback.apply(null, arguments);
                         }
-                    }
+                    };
 
                     if(generator.length > 0){
-                        generator(cacher);
+                        return new Promise(function(res, rej){
+                            var resolver = function(){
+                                cacher.apply(null, arguments);
+                                res(arguments[0]);
+                            };
+                            generator(resolver);
+                        });
                     }else{
-                        cacher(generator());
+                        try{
+                            var prom = Promise.resolve(generator());
+                            prom.then(function(args){
+                                cacher(args);
+                            }).catch(function(e){
+                                if(callback){
+                                    callback(e);
+                                }
+                            });
+                            return prom;
+                        }catch(e){
+                            if(callback){
+                                callback(e);
+                            }
+                            return Promise.reject(e);
+                        }
                     }
                 }
             }else{
@@ -56,6 +82,7 @@ module.exports = function(options){
                 if(callback){
                     callback.apply(null, args);
                 }
+                return Promise.resolve(args[0]);
             }
         },
         del : function(key){

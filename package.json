@@ -1,7 +1,7 @@
 {
   "name": "call-cache",
   "version": "1.1.0",
-  "description": "A simple in-memory function call caching for node.js feeding a callback",
+  "description": "A simple in-memory function call caching for node.js feeding a callback and returning a Promise",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test"
@@ -14,6 +14,8 @@
     "cache",
     "function",
     "callback",
+    "async",
+    "promises",
     "ram"
   ],
   "author": "Thomas Dubosc (http://repraze.com)",

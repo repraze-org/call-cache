@@ -1,8 +1,9 @@
 # call-cache
-A simple in-memory function call caching for node.js feeding a callback
+A simple in-memory function call caching for node.js feeding a callback and returning a Promise
 
 * Speedup the generation of pages by storing external API calls
 * Works great with **async** for multiple calls by feeding the final callback
+* Compatible with **Promises** to use with the latest APIs
 * Prevent reaching limits using external APIs
 
 ## Installation
@@ -38,9 +39,20 @@ cache.get('bar',
         console.log('Retrieved '+result);
     }
 );
+
+// using the cache with Promises
+
+cache.get('baz',
+    function(callback){     // generating the cache
+        console.log('Fetching Baz');
+        callback('Baz');    // promise will get the first parameter
+    }
+).then(function(result){          // promise style, always called
+    console.log('Retrieved '+result);
+});
 ```
 
-Should output:
+Should output (order might change):
 
     Cache: foo - Getting data, next time in 300000 //debug
     Fetching Foo
@@ -48,6 +60,9 @@ Should output:
     Cache: bar - Getting data, next time in 300000 //debug
     Fetching Bar
     Retrieved Bar
+    Cache: baz - Getting data, next time in 300000 //debug
+    Fetching Baz
+    Retrieved Baz
 
 ## API
 
@@ -58,6 +73,7 @@ Should output:
 * Calls callback directly with any n cached arguments passed by the generator function
 * Callback is optional to only define periodical functions
 * Optional options can be provided to overwrite global ones
+* Returns a Promise resolving what is returned as a value or Promise, or the first argument sent to the callback, from the generator
 
 ### del : function(key)
 
@@ -113,6 +129,44 @@ cache.get('foobar',
         );
     }
 );
+```
+
+Should output:
+
+    Cache: foobar - Getting data, next time in 300000 //debug
+    Fetching Foo and Bar
+    Retrieved foo Retrieved bar
+
+## Usage with Promises
+
+```javascript
+var cache = require('call-cache')({debug: true});
+var async = require('async');
+
+// using the cache
+
+cache.get('foobar',
+    function(){    // generating the cache
+        console.log('Fetching Foo and Bar');
+        return Promise.all([ // allows multiple Promises
+            new Promise(function(res, rej){
+                setTimeout(function(){
+                    res('foo');
+                }, 100);
+            }),
+            new Promise(function(res, rej){
+                setTimeout(function(){
+                    res('bar');
+                }, 200);
+            })
+        ]);
+    }
+).then(function(result){
+    console.log(
+        'Retrieved '+result[0],
+        'Retrieved '+result[1]
+    );
+});
 ```
 
 Should output:

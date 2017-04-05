@@ -141,7 +141,6 @@ Should output:
 
 ```javascript
 var cache = require('call-cache')({debug: true});
-var async = require('async');
 
 // using the cache
 

@@ -1,4 +1,7 @@
 # call-cache
+
+[![Build Status](https://travis-ci.org/repraze-org/call-cache.svg?branch=master)](https://travis-ci.org/repraze-org/call-cache)
+
 A simple in-memory function call caching for node.js feeding a callback and returning a Promise
 
 * Speedup the generation of pages by storing external API calls
